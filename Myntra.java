@@ -19,47 +19,57 @@ public class Myntra {
 
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--disable-notifications");
+		
 		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+		
 		WebDriver driver = new ChromeDriver(options);
 		driver.manage().window().maximize();
 		driver.get("https://www.myntra.com/");
 		driver.manage().timeouts().implicitlyWait(30,TimeUnit.SECONDS);
 		
 		//Move to element WOMEN and click JACKETS & COATS
-		WebElement women = driver.findElement(By.xpath("//a[text()='Women' and @class='desktop-main']"));
-		WebElement jktCoat = driver.findElement(By.xpath("//a[text()='Jackets & Coats']"));
 		Actions action = new Actions(driver);
+
+		WebElement women = driver.findElement(By.xpath("//a[text()='Women' and @class='desktop-main']"));
 		action.moveToElement(women).perform();
 		Thread.sleep(5000);
+		
+		WebElement jktCoat = driver.findElement(By.xpath("//a[text()='Jackets & Coats']"));
 		action.moveToElement(jktCoat).click().perform();
+		
 		
 		String count = driver.findElement(By.className("title-count")).getText();
 		String rplcText = count.replaceAll("\\D", "");
 		int totalCount = Integer.parseInt(rplcText);
 		System.out.println(totalCount);
-
+		
+		//No of Jackets
 		String jackets = driver.findElement(By.xpath("//input[@value='Jackets']//parent::label/span")).getText();
 		String rplJackets = jackets.replaceAll("\\D", "");
 		int jktCount = Integer.parseInt(rplJackets);
 		
+		//No of coats
 		String coats = driver.findElement(By.xpath("//input[@value='Coats']//parent::label/span")).getText();
 		String rplCoats = coats.replaceAll("\\D", "");
 		int coatCount = Integer.parseInt(rplCoats);		
 		
+		//Compare TOTAL COUNT
 		int totalCount2 = jktCount+coatCount;
 		System.out.println(totalCount2);
 		
-		if (totalCount == totalCount2) {
+		if (totalCount==totalCount2) {
 			System.out.println("Both the values are same");
 		} else {
 			System.out.println("Values differ from each other");
 		}
 		
-		
+		//Click coat and more
 		driver.findElement(By.xpath("//input[@value='Coats']//parent::label")).click();
 		Thread.sleep(3000);
 		driver.findElement(By.className("brand-more")).click();
 		Thread.sleep(3000);
+		
+		//Search MANGO Brand and close menu
 		driver.findElement(By.className("FilterDirectory-searchInput")).sendKeys("Mango",Keys.ENTER);
 		Thread.sleep(3000);
 		driver.findElement(By.xpath("//ul[@class='FilterDirectory-list']/li/label")).click();
@@ -70,55 +80,47 @@ public class Myntra {
 		//Find number of MANGO Product
 		WebElement dressTable = driver.findElement(By.className("results-base"));
 		
-		List<WebElement> dresses = dressTable.findElements(By.tagName("li"));
-		for (int i = 0; i < dresses.size(); i++) {
-			List<WebElement> brandName = dresses.get(i).findElements(By.tagName("h3"));
-			for (WebElement eleBrand : brandName) {
-				String brand = eleBrand.getText();
-				if (brand.equalsIgnoreCase("MANGO")) {
-					System.out.println("Brand Name matches");
-				} else {
-					System.out.println("Brand Mismatch");
-				}
+		List<WebElement> brandList = driver.findElements(By.tagName("h3"));
+		for (WebElement eleBrand : brandList) {
+			String name = eleBrand.getText();
+			if (name.equalsIgnoreCase("MANGO")) {
+				System.out.println("true");
 			}
 		}
 		
 		//Mouse Hover and sort product based on Discount
-		Actions builder = new Actions(driver);
+		Actions action2 = new Actions(driver);
 		WebElement sortBy = driver.findElement(By.className("sort-sortBy"));
-		builder.moveToElement(sortBy).perform();
+		action2.moveToElement(sortBy).perform();
 		
 		WebElement discount = driver.findElement(By.xpath("//label[text()='Better Discount']"));
-		Thread.sleep(3000);
-		builder.moveToElement(discount).click().perform();
+		action2.moveToElement(discount).click().perform();
 		Thread.sleep(3000);
 		
 		
 		//to get the Price and convert String into INTEGER
-		WebElement priceTable = driver.findElement(By.className("results-base"));
-		
-		List<WebElement> price = priceTable.findElements(By.className("product-base"));
-		for (int i = 0; i < 1 ; i++) {
-			List<WebElement> priceList = price.get(i).findElements(By.xpath("//ul[@class='results-base']/li/a/div[2]/div/span/span[1]"));
-			for (WebElement elePrice : priceList) {
-				String dressPrice = elePrice.getText();
-				String rplcPrice = dressPrice.replaceAll("\\D", "");
-				int finalPrice = Integer.parseInt(rplcPrice);
-				System.out.println(finalPrice);
-			}
+		List<WebElement> price = driver.findElements(By.xpath("//ul[@class='results-base']/li/a/div[2]/div/span/span[1]"));
+		for (WebElement elePrice : price) {
+			String dressPrice = elePrice.getText();
+			String rplcPrice = dressPrice.replaceAll("\\D", "");
+			int finalPrice = Integer.parseInt(rplcPrice);
+			System.out.println(finalPrice);
 		}
 		
 		//Mouse Hover on Product to enable Wishlist
+		Actions action3 = new Actions(driver);
 		WebElement product = driver.findElement(By.className("product-base"));
-		builder.moveToElement(product).perform();
+		action3.moveToElement(product).perform();
 		Thread.sleep(3000);
 		
 		WebElement sizeOfPrd = driver.findElement(By.xpath("//ul[@class='results-base']/li[1]/a/div/h4/span[4]"));
-		builder.moveToElement(sizeOfPrd).perform();
+		action3.moveToElement(sizeOfPrd).perform();
 		
 		//Click WishList
 		driver.findElement(By.xpath("//ul[@class='results-base']/li[1]/div[3]/span")).click();
 		
 		driver.close();
+		
+		
 	}
 }
