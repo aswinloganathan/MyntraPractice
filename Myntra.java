@@ -41,7 +41,7 @@ public class Myntra {
 		String count = driver.findElement(By.className("title-count")).getText();
 		String rplcText = count.replaceAll("\\D", "");
 		int totalCount = Integer.parseInt(rplcText);
-		System.out.println(totalCount);
+		System.out.println("Total product count is: "+totalCount);
 		
 		//No of Jackets
 		String jackets = driver.findElement(By.xpath("//input[@value='Jackets']//parent::label/span")).getText();
@@ -55,7 +55,6 @@ public class Myntra {
 		
 		//Compare TOTAL COUNT
 		int totalCount2 = jktCount+coatCount;
-		System.out.println(totalCount2);
 		
 		if (totalCount==totalCount2) {
 			System.out.println("Both the values are same");
@@ -77,9 +76,7 @@ public class Myntra {
 		driver.findElement(By.xpath("//ul[@class='FilterDirectory-indices']/following-sibling::span")).click();
 		
 		
-		//Find number of MANGO Product
-		WebElement dressTable = driver.findElement(By.className("results-base"));
-		
+		//Find number of MANGO Product		
 		List<WebElement> brandList = driver.findElements(By.tagName("h3"));
 		for (WebElement eleBrand : brandList) {
 			String name = eleBrand.getText();
@@ -89,35 +86,33 @@ public class Myntra {
 		}
 		
 		//Mouse Hover and sort product based on Discount
-		Actions action2 = new Actions(driver);
 		WebElement sortBy = driver.findElement(By.className("sort-sortBy"));
-		action2.moveToElement(sortBy).perform();
+		action.moveToElement(sortBy).perform();
 		
 		WebElement discount = driver.findElement(By.xpath("//label[text()='Better Discount']"));
-		action2.moveToElement(discount).click().perform();
+		action.moveToElement(discount).click().perform();
 		Thread.sleep(3000);
 		
 		
 		//to get the Price and convert String into INTEGER
-		List<WebElement> price = driver.findElements(By.xpath("//ul[@class='results-base']/li/a/div[2]/div/span/span[1]"));
-		for (WebElement elePrice : price) {
-			String dressPrice = elePrice.getText();
-			String rplcPrice = dressPrice.replaceAll("\\D", "");
-			int finalPrice = Integer.parseInt(rplcPrice);
-			System.out.println(finalPrice);
-		}
+		List<WebElement> price = driver.findElements(By.xpath("//span[@class='product-discountedPrice']"));
+		String dressPrice = price.get(0).getText();
+		String rplcPrice = dressPrice.replaceAll("\\D", "");
+		int finalPrice = Integer.parseInt(rplcPrice);
+		System.out.println("Price of the first product is:"+finalPrice);
 		
 		//Mouse Hover on Product to enable Wishlist
-		Actions action3 = new Actions(driver);
 		WebElement product = driver.findElement(By.className("product-base"));
-		action3.moveToElement(product).perform();
+		action.moveToElement(product).perform();
 		Thread.sleep(3000);
 		
 		WebElement sizeOfPrd = driver.findElement(By.xpath("//ul[@class='results-base']/li[1]/a/div/h4/span[4]"));
-		action3.moveToElement(sizeOfPrd).perform();
+		action.moveToElement(sizeOfPrd).perform();
 		
 		//Click WishList
 		driver.findElement(By.xpath("//ul[@class='results-base']/li[1]/div[3]/span")).click();
+		
+		System.out.println("Page redirected to"+ driver.getTitle());
 		
 		driver.close();
 		
