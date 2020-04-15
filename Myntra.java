@@ -78,12 +78,19 @@ public class Myntra {
 		
 		//Find number of MANGO Product		
 		List<WebElement> brandList = driver.findElements(By.tagName("h3"));
+		
+		int count1 = 0;
+		
 		for (WebElement eleBrand : brandList) {
 			String name = eleBrand.getText();
 			if (name.equalsIgnoreCase("MANGO")) {
-				System.out.println("true");
+				count1++;
 			}
 		}
+		if (count1 == brandList.size()) {
+			System.out.println("All the product is Mango Brand");
+		}
+		
 		
 		//Mouse Hover and sort product based on Discount
 		WebElement sortBy = driver.findElement(By.className("sort-sortBy"));
@@ -104,16 +111,13 @@ public class Myntra {
 		//Mouse Hover on Product to enable Wishlist
 		WebElement product = driver.findElement(By.className("product-base"));
 		action.moveToElement(product).perform();
-		Thread.sleep(3000);
 		
 		WebElement sizeOfPrd = driver.findElement(By.xpath("//ul[@class='results-base']/li[1]/a/div/h4/span[4]"));
 		action.moveToElement(sizeOfPrd).perform();
 		
 		//Click WishList
 		driver.findElement(By.xpath("//ul[@class='results-base']/li[1]/div[3]/span")).click();
-		
-		System.out.println("Page redirected to"+ driver.getTitle());
-		
+				
 		driver.close();
 		
 		
